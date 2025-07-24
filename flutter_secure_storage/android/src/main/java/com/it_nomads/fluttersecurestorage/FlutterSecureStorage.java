@@ -197,7 +197,7 @@ public class FlutterSecureStorage {
             for (Map.Entry<String, ?> entry : source.getAll().entrySet()) {
                 Object v = entry.getValue();
                 String key = entry.getKey();
-                if (v instanceof String)) {
+                if (v instanceof String) {
                     final String decodedValue = decodeRawValue((String) v);
                     cache.put(key, decodedValue);
                 }
