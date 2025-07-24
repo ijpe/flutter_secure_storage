@@ -73,10 +73,7 @@ public class FlutterSecureStorage {
         ensureInitialized();
 
         String rawValue = preferences.getString(key, null);
-        if (getUseEncryptedSharedPreferences()) {
-            return rawValue;
-        }
-        return decodeRawValue(rawValue);
+        return rawValue;
     }
 
     @SuppressWarnings("unchecked")
@@ -94,9 +91,7 @@ public class FlutterSecureStorage {
                     all.put(key, entry.getValue());
                 } else {
                     String rawValue = entry.getValue();
-                    String value = decodeRawValue(rawValue);
-
-                    all.put(key, value);
+                    all.put(key, rawValue);
                 }
             // }
         }
@@ -108,12 +103,8 @@ public class FlutterSecureStorage {
 
         SharedPreferences.Editor editor = preferences.edit();
 
-        if (getUseEncryptedSharedPreferences()) {
-            editor.putString(key, value);
-        } else {
-            byte[] result = storageCipher.encrypt(value.getBytes(charset));
-            editor.putString(key, Base64.encodeToString(result, 0));
-        }
+        // Guardar valor directamente sin cifrar
+        editor.putString(key, value);
         editor.apply();
     }
 
@@ -255,12 +246,7 @@ public class FlutterSecureStorage {
     }
 
     private String decodeRawValue(String value) throws Exception {
-        if (value == null) {
-            return null;
-        }
-        byte[] data = Base64.decode(value, 0);
-        byte[] result = storageCipher.decrypt(data);
-
-        return new String(result, charset);
+        // Leer valor directamente sin descifrar
+        return value;
     }
 }
