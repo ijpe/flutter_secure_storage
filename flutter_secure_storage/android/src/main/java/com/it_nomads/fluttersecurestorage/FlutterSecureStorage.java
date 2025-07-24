@@ -27,7 +27,7 @@ public class FlutterSecureStorage {
     private final String TAG = "SecureStorageAndroid";
     private final Charset charset;
     private final Context applicationContext;
-    protected String ELEMENT_PREFERENCES_KEY_PREFIX = "VGhpcyBpcyB0aGUgcHJlZml4IGZvciBhIHNlY3VyZSBzdG9yYWdlCg";
+    // protected String ELEMENT_PREFERENCES_KEY_PREFIX = "VGhpcyBpcyB0aGUgcHJlZml4IGZvciBhIHNlY3VyZSBzdG9yYWdlCg";
     protected Map<String, Object> options;
     private String SHARED_PREFERENCES_NAME = "FlutterSecureStorage";
     private SharedPreferences preferences;
@@ -66,7 +66,7 @@ public class FlutterSecureStorage {
     }
 
     public String addPrefixToKey(String key) {
-        return ELEMENT_PREFERENCES_KEY_PREFIX + "_" + key;
+        return key;
     }
 
     public String read(String key) throws Exception {
@@ -88,16 +88,15 @@ public class FlutterSecureStorage {
         Map<String, String> all = new HashMap<>();
         for (Map.Entry<String, String> entry : raw.entrySet()) {
             String keyWithPrefix = entry.getKey();
-            if (keyWithPrefix.contains(ELEMENT_PREFERENCES_KEY_PREFIX)) {
-                String key = entry.getKey().replaceFirst(ELEMENT_PREFERENCES_KEY_PREFIX + '_', "");
-                if (getUseEncryptedSharedPreferences()) {
-                    all.put(key, entry.getValue());
-                } else {
-                    String rawValue = entry.getValue();
-                    String value = decodeRawValue(rawValue);
+            // if (keyWithPrefix.contains(ELEMENT_PREFERENCES_KEY_PREFIX)) {
+            String key = entry.getKey();
+            if (getUseEncryptedSharedPreferences()) {
+                all.put(key, entry.getValue());
+            } else {
+                String rawValue = entry.getValue();
+                String value = decodeRawValue(rawValue);
 
-                    all.put(key, value);
-                }
+                all.put(key, value);
             }
         }
         return all;
@@ -141,9 +140,9 @@ public class FlutterSecureStorage {
            SHARED_PREFERENCES_NAME = (String) options.get("sharedPreferencesName");
        }
 
-       if (options.containsKey("preferencesKeyPrefix") && !((String) options.get("preferencesKeyPrefix")).isEmpty()) {
-           ELEMENT_PREFERENCES_KEY_PREFIX = (String) options.get("preferencesKeyPrefix");
-       }
+       // if (options.containsKey("preferencesKeyPrefix") && !((String) options.get("preferencesKeyPrefix")).isEmpty()) {
+       //     ELEMENT_PREFERENCES_KEY_PREFIX = (String) options.get("preferencesKeyPrefix");
+       // }
     }
     @SuppressWarnings({"ConstantConditions"})
     private void ensureInitialized() {

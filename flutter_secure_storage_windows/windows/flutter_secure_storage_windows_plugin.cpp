@@ -89,12 +89,9 @@ namespace
     bool ContainsKey(const std::string &key);
   };
 
-  const std::string ELEMENT_PREFERENCES_KEY_PREFIX = SECURE_STORAGE_KEY_PREFIX;
-  const int ELEMENT_PREFERENCES_KEY_PREFIX_LENGTH = (sizeof SECURE_STORAGE_KEY_PREFIX) - 1;
-
   // this string is used to filter the credential storage so that only the values written
   // by this plugin shows up.
-  const CA2W CREDENTIAL_FILTER((ELEMENT_PREFERENCES_KEY_PREFIX + '*').c_str());
+  const CA2W CREDENTIAL_FILTER((SECURE_STORAGE_KEY_PREFIX + '*').c_str());
 
   static inline void rtrim(std::wstring& s) {
       s.erase(std::find_if(s.rbegin(), s.rend(), [](wchar_t ch) {
@@ -130,13 +127,13 @@ namespace
   {
     auto key = this->GetStringArg("key", args);
     if (key.has_value())
-      return ELEMENT_PREFERENCES_KEY_PREFIX + key.value();
+      return key.value();
     return std::nullopt;
   }
 
   std::string FlutterSecureStorageWindowsPlugin::RemoveKeyPrefix(const std::string& key)
   {
-    return key.substr(ELEMENT_PREFERENCES_KEY_PREFIX_LENGTH);
+    return key;
   }
 
   std::optional<std::string> FlutterSecureStorageWindowsPlugin::GetStringArg(
@@ -317,7 +314,7 @@ namespace
       DWORD credError = 0;
       PBYTE AesKey;
       PCREDENTIALW pcred;
-      CA2W target_name(("key_" + ELEMENT_PREFERENCES_KEY_PREFIX).c_str());
+      CA2W target_name(("key_" + SECURE_STORAGE_KEY_PREFIX).c_str());
 
       AesKey = (PBYTE)HeapAlloc(GetProcessHeap(), 0, KEY_SIZE);
       if (NULL == AesKey) {
