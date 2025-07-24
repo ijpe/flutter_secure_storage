@@ -89,15 +89,16 @@ public class FlutterSecureStorage {
         for (Map.Entry<String, String> entry : raw.entrySet()) {
             String keyWithPrefix = entry.getKey();
             // if (keyWithPrefix.contains(ELEMENT_PREFERENCES_KEY_PREFIX)) {
-            String key = entry.getKey();
-            if (getUseEncryptedSharedPreferences()) {
-                all.put(key, entry.getValue());
-            } else {
-                String rawValue = entry.getValue();
-                String value = decodeRawValue(rawValue);
+                String key = entry.getKey();
+                if (getUseEncryptedSharedPreferences()) {
+                    all.put(key, entry.getValue());
+                } else {
+                    String rawValue = entry.getValue();
+                    String value = decodeRawValue(rawValue);
 
-                all.put(key, value);
-            }
+                    all.put(key, value);
+                }
+            // }
         }
         return all;
     }
@@ -196,7 +197,7 @@ public class FlutterSecureStorage {
             for (Map.Entry<String, ?> entry : source.getAll().entrySet()) {
                 Object v = entry.getValue();
                 String key = entry.getKey();
-                if (v instanceof String && key.contains(ELEMENT_PREFERENCES_KEY_PREFIX)) {
+                if (v instanceof String)) {
                     final String decodedValue = decodeRawValue((String) v);
                     cache.put(key, decodedValue);
                 }
@@ -220,7 +221,7 @@ public class FlutterSecureStorage {
             for (Map.Entry<String, ?> entry : source.getAll().entrySet()) {
                 Object v = entry.getValue();
                 String key = entry.getKey();
-                if (v instanceof String && key.contains(ELEMENT_PREFERENCES_KEY_PREFIX)) {
+                if (v instanceof String) {
                     final String decodedValue = decodeRawValue((String) v);
                     target.edit().putString(key, (decodedValue)).apply();
                     source.edit().remove(key).apply();
